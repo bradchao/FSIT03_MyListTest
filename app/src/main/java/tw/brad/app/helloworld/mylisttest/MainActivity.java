@@ -89,6 +89,11 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+    public void clearItem(View view){
+        data.clear();
+        adapter.notifyDataSetChanged();
+    }
+
 
 
     public void addItem(View view){

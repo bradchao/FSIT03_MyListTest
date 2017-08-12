@@ -20,8 +20,9 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="b2"
+            android:text="Clear"
             android:layout_weight="1"
+            android:onClick="clearItem"
             />
     </LinearLayout>
     <ListView
