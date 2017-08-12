@@ -1,8 +1,12 @@
 package tw.brad.app.helloworld.mylisttest;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -17,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private String[] from = {"title", "content"};
     private int[] to = {R.id.item_title, R.id.item_content};
     private SimpleAdapter adapter;
+    private int removeIndex = -1;
 
 
     @Override
@@ -42,7 +47,49 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new SimpleAdapter(this, data, R.layout.layout_item, from , to);
         list.setAdapter(adapter);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.i("brad", "Click:" + i);
+            }
+        });
+
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.i("brad", "LongClick:" + i);
+                removeIndex = i;
+                showDeleteDialog();
+                return true;
+            }
+        });
     }
+
+    private void showDeleteDialog(){
+        AlertDialog dialog = null;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Warn");
+        builder.setMessage("Delete " + data.get(removeIndex).get(from[0]) + " ?");
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                removeItem();
+                removeIndex = -1;
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.setCancelable(false);
+        dialog = builder.create();
+        dialog.show();
+    }
+
+    private void removeItem(){
+        data.remove(removeIndex);
+        adapter.notifyDataSetChanged();
+    }
+
+
 
     public void addItem(View view){
         Map<String,String> d1 = new HashMap<>();
